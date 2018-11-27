@@ -15,15 +15,15 @@ Why JSQL ?
 - Provide ExecutorPool/ConnectionPool for jdbc connection pooling
 
 ## Requirements
+
 - JDK8+
 
 ## Features
+
 1. Connection/JdbcExecutor pool
 2. SQL syntax like builder
-3. Transaction
 4. Support common dialects
-5. Auto paging
-6. Jdbc executor for query, update or batch update
 7. Super lightweight ORM
+5. Auto paging
 8. Against SQL inject
 9. Logging ability

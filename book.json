@@ -1,0 +1,23 @@
+{
+  "plugins": [
+    "page-footer"
+  ],
+  "pluginsConfig": {
+    "page-footer": {
+      "description": "",
+      "signature": "Edward",
+      "wisdom": "JSQL JustSQL jdbc lightweight framework <br> <strong>Domain Audit Order Number(zh_CN: 备案订单号) 30153838157544356</strong>",
+      "format": "yyyy-MM-dd hh:mm:ss",
+      "copyright": "Copyright &#169; edward",
+      "timeColor": "#666",
+      "copyrightColor": "#666",
+      "utcOffset": "8",
+      "isShowQRCode": true,
+      "baseUri": "https://www.icuter.cn/",
+      "isShowIssues": false,
+      "issueNum": "8",
+      "token": "",
+      "style": "normal"
+    }
+  }
+}
