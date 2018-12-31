@@ -6,59 +6,57 @@ When Builder has been built, we could use JdbcExecutor for execution. `dataSourc
 ### Select
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor executor = dataSource.createJdbcExecutor()) {
+JdbcExecutor executor = dataSource.createJdbcExecutor();
+try {
     List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery(executor);
+} finally {
+    executor.close();
 }
 ```
 
 ### Insert/Update/Delete
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor executor = dataSource.createJdbcExecutor()) {
+JdbcExecutor executor = dataSource.createJdbcExecutor();
+try {
     int count = delete().from("table").where().eq("name", "jsql").execUpdate(executor);
+} finally {
+     executor.close();
 }
 ```
 
 ### Batch Update
-Builder List in batch group by the same sql, if sql is different, will seperate different batch update.
+Builder List in batch group by the same sql, if sql is different, will separate different batch update.
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor executor = dataSource.createJdbcExecutor()) {
+JdbcExecutor executor = dataSource.createJdbcExecutor();
+try {
     List<Builder> builderList = new LinkedList<>() {{
-        add(new DeleteBuilder() {{
-            delete().from("table").where().eq("name", "Jhon").build();
-        }});
-        add(new DeleteBuilder() {{
-            delete().from("table").where().eq("name", "Edward").build();
-        }});
-        add(new DeleteBuilder() {{
-            delete().from("table").where().eq("name", "Jack").build();
-        }});
+        add(new DeleteBuilder().delete().from("table").where().eq("name", "Jhon").build());
+        add(new DeleteBuilder().delete().from("table").where().eq("name", "Edward").build());
+        add(new DeleteBuilder().delete().from("table").where().eq("name", "Jack").build());
     }};
     executor.execBatch(builderList);
+} finally {
+    executor.close();
 }
 ```
 
 As following example, I try to delete and update in `execBatch` with different executable SQL.
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor executor = dataSource.createJdbcExecutor()) {
+JdbcExecutor executor = dataSource.createJdbcExecutor();
+try {
     List<Builder> builderList = new LinkedList<>() {{
-        add(new DeleteBuilder() {{
-            delete().from("table").where().eq("name", "Jhon").build();
-        }});
-        add(new DeleteBuilder() {{
-            delete().from("table").where().eq("name", "Edward").build();
-        }});
-        add(new UpdateBuilder() {{
-            update("table").set(Cond.eq("name", "Edward")).where().eq("id", 12345678).build();
-        }});
-        add(new UpdateBuilder() {{
-            update("table").set(Cond.eq("name", "John")).where().eq("id", 123456789).build();
-        }});
+        add(new DeleteBuilder().delete().from("table").where().eq("name", "Jhon").build());
+        add(new DeleteBuilder().delete().from("table").where().eq("name", "Edward").build());
+        add(new UpdateBuilder().update("table").set(Cond.eq("name", "Edward")).where().eq("id", 12345678).build());
+        add(new UpdateBuilder().update("table").set(Cond.eq("name", "John")).where().eq("id", 123456789).build());
     }};
     executor.execBatch(builderList);
+} finally {
+    executor.close();
 }
 ```
 At this time, `delete from table where name = ?` and `update table set name = ? where id = ?` will create two batch execution.
@@ -68,41 +66,32 @@ If you want to new a `JdbcExcecutor` instance without `JSQLDataSource`, you coul
 ```java
 Connection connection = yourConnection;
 JdbcExecutor executor = new DefaultJdbcExecutor(connection);
-Builder builder = new SelectBuilder() {{
-    select().from("table").where().eq("name", "jsql").build();
-}};
+Builder builder = new SelectBuilder().select().from("table").where().eq("name", "jsql").build();
 List<Map<String, Object>> resultList = executor.execQuery(builder);
 ```
 
 ## Transaction
-At this section, we could learn TransactionExecutor's usage and we would pay attention it's detail for commit/rollback/end and even Connection close.
+At this section, we could learn `TransactionExecutor`'s usage and we would note that it's detail for commit/rollback/end and even Connection close.
 
 ### TransactionExecutor
 Now, let'u create a `TransactionExecutor` with `Connection` parameter. At following example, while we commit/rollback, `Connection` will be closed as well.
 ```java
-Connection connection = createConnection(false);
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+Connection connection = dataSource.createConnection(false);
 TransactionExecutor executor = new TransactionExecutor(connection);
-executor.setStateListener((tx, state) -> {
-    if (tx.wasCommitted() || tx.wasRolledBack()) {
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new ExecutionException("closing Connection error", e);
-        }
-    }
-});
-Builder delete = new DeleteBuilder() {{
-    delete().from("table_name").where().eq("id", "<UUID>").build();
-}};
-executor.execUpdate(delete);
-
-executor.end(); // auto commit and close Connection by using StateListener
+try {
+    Builder delete = new DeleteBuilder().delete().from("table_name").where().eq("id", "<UUID>").build()};
+    executor.execUpdate(delete);
+    executor.commit();
+} catch (Exception e) {
+    executor.rollback();
+} finally {
+    executor.close();
+}
 ```
 
 ### JSQLDataSource
-We could create a `TransactionExecutor` by `JSQLDataSource`, and let's simplfy the example above.
+`TransactionExecutor` could created by `JSQLDataSource` directly.
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 TransactionExecutor executor = dataSource.createTransaction();
@@ -111,6 +100,8 @@ try {
     executor.commit();
 } catch (Exception e) {
     executor.rollback();
+} finally {
+    executor.close();
 }
 ```
 
@@ -133,11 +124,15 @@ try {
 }
 ```
 
-For convenience, we could simplfy our sample as follow, if you forget to commit transaction, all DML operation to DB will be auto commit before return to the jdbc executor pool. When call `executor.close`/`executor.end` will auto return to executor pool.
+Another example show you calling `executor.close`/`executor.end` are meaning returning to executor pool.
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 JdbcExecutorPool pool = dataSource.createExecutorPool();
-try (TransactionExecutor executor = pool.getTransactionExecutor()) {
-    ... auto commit when executor.close or end
+TransactionExecutor executor = pool.getTransactionExecutor();
+try {
+    // TODO TransactionExecutor which from JdbcExecutorPool will be return after closed 
+    executor.commit();
+} finally {
+    executor.close();
 }
 ```

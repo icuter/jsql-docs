@@ -30,8 +30,11 @@ Like Connection Pool creation, but provide a executor object which combine JdbcE
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 JdbcExecutorPool pool = dataSource.createExecutorPool();
-try (JdbcExecutor executor = pool.getExecutor()) {
+JdbcExecutor executor = pool.getExecutor();
+try {
     // TODO do something with executor
+} finally {
+    executor.close();
 }
 ```
 
@@ -39,8 +42,11 @@ Let's refactor our quick start example by using `JdbcExecutorPool`
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 JdbcExecutorPool pool = dataSource.createExecutorPool();
-try (JdbcExecutor executor = pool.getExecutor()) {
+JdbcExecutor executor = pool.getExecutor();
+try {
     List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery(executor);
+} finally {
+    executor.close();
 }
 ```
 

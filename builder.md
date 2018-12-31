@@ -12,9 +12,7 @@ DeleteBuilder delete = dataSource.delete();               // same to new DeleteB
 ### SelectBuilder
 Created by keyword of `new`, normally, we could new a Builder for SQL construction.
 ```java
-Builder builder = new SelectBuilder() {{
-    select().from("table").where().eq("name", "jsql").build();
-}};
+Builder builder = new SelectBuilder().select().from("table").where().eq("name", "jsql").build();
 ```
 In less coding way, we could create a Builder by using `JSQLDataSource` as follow.
 ```java
@@ -29,11 +27,10 @@ dataSource.select().from("table").where().eq("name", "jsql").build();
 ### InsertBuilder
 
 ```java
-Builder insert = new InsertBuilder() {{
-    insert("table")
-        .values(Cond.eq("col1", "val1"), Cond.eq("col2", 102),Cond.eq("col3", "val3"))
-        .build();
-}};
+Builder insert = new InsertBuilder()
+    .insert("table")
+    .values(Cond.eq("col1", "val1"), Cond.eq("col2", 102),Cond.eq("col3", "val3"))
+    .build();
 ```
 
 Created by `JSQLDataSource` as follow.
@@ -50,13 +47,12 @@ dataSource.insert("table")
 ### UpdateBuilder
 
 ```java
-Builder update = new UpdateBuilder() {{
-    update("t_table")
-        .set(Cond.eq("col1", "val1"), Cond.eq("col2", 102), Cond.eq("col3", "val3"))
-        .where()
-        .like("id", "123%")
-        .build();
-}};
+Builder update = new UpdateBuilder()
+    .update("t_table")
+    .set(Cond.eq("col1", "val1"), Cond.eq("col2", 102), Cond.eq("col3", "val3"))
+    .where()
+    .like("id", "123%")
+    .build();
 ```
 
 Created by `JSQLDataSource` as follow.
@@ -74,9 +70,7 @@ dataSOurce.update("t_table")
 
 ### DeleteBuilder
 ```java
-Builder delete = new DeleteBuilder() {{
-    delete().from("t_table").where().eq("id", 123456789).build();
-}};
+Builder delete = new DeleteBuilder().delete().from("t_table").where().eq("id", 123456789).build();
 ```
 
 Created by `JSQLDataSource` as follow.

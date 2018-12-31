@@ -1,11 +1,11 @@
 # JSQL JustSQL framework
 
 * [Introduction](README.md)
-* [Pool](pool.md)
-* [Builder](builder.md)
+* [Quick Start](quickstart.md)
+* [JDBC Connection Pool](pool.md)
+* [SQL Builder](builder.md)
 * [Condition](condition.md)
-* [Dialect](dialect.md)
+* [DB Dialect](dialect.md)
 * [ORM](orm.md)
-* [Executor](executor.md)
-* [Logging](logging.md)
-
+* [SQL Executor](executor.md)
+* [Logging Customization](logging.md)
