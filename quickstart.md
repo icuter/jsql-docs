@@ -5,27 +5,18 @@ As following example, you can learn how to new a `Connection` from `JSQLDataSour
 ## Configure in maven pom.xml file
 
 ```text
-<repositories>
-  ...
-  <repository>
-    <id>icuter</id>
-    <url>https://github.com/icuter/mvn-repository/tree/master</url>
-  </repository>
-  ...
-</repositories>
-
 <!-- for jdk1.8 -->
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.0</version>
 </dependency>
 
 <!-- for jdk1.6 -->
 <dependency>
   <groupId>cn.icuter</groupId>
-  <artifactId>jsql</artifactId>
-  <version>1.0.3-jdk1.6</version>
+  <artifactId>jsql-jdk1.6</artifactId>
+  <version>1.0.0</version>
 </dependency>
 ```
 ## Coding
