@@ -12,7 +12,7 @@ steps:
     path: /tmp/jsql-docs
   volumes:
   - name: ssh
-    path: ~/.ssh
+    path: /root/.ssh
   commands:
   - mkdir -p /tmp/jsql-docs
   - cd /tmp/jsql-docs
@@ -25,7 +25,7 @@ volumes:
 volumes:
 - name: ssh
   host:
-    path: ~/.ssh
+    path: /root/.ssh
 
 trigger:
   branch:
