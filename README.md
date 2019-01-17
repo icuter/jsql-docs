@@ -16,7 +16,7 @@ Why JSQL ?
 
 ## Requirements
 
-- JDK8+
+- JDK6+
 
 ## Features
 
