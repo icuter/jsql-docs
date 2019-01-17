@@ -10,6 +10,9 @@ steps:
   volumes:
   - name: jsql-gitbook-source
     path: /tmp/jsql-docs
+  volumes:
+  - name: ssh
+    path: ~/.ssh
   commands:
   - mkdir -p /tmp/jsql-docs
   - cd /tmp/jsql-docs
@@ -19,6 +22,10 @@ volumes:
 - name: jsql-gitbook-source
   host:
     path: /home/gitbook/jsql
+volumes:
+- name: ssh
+  host:
+    path: ~/.ssh
 
 trigger:
   branch:
