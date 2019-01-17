@@ -9,13 +9,12 @@ steps:
   image: docker:git
   volumes:
   - name: jsql-gitbook-source
-    path: /tmp/jsql-docs
+    path: /home/gitbook/jsql
   volumes:
   - name: ssh
     path: /root/.ssh
   commands:
-  - mkdir -p /tmp/jsql-docs
-  - cd /tmp/jsql-docs
+  - cd /home/gitbook/jsql
   - git pull --rebase
 
 volumes:
