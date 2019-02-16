@@ -9,13 +9,13 @@ Dialect is for unify variant DB while building SQL, so far, Dialect could inject
 - DB2Dialect
 - DerbyDialect
 - H2Dialect
-- MariadbDialect
+- MariaDBDialect
 - MySQLDialect
 - OracleDialect
 - PostgreSQLDialect
 - SQLServer2012PlusDialect
 - SqlServerDialect
-- UnknownDialect
+- UnknownDialect (Other kinds of DB JSQL don't support)
 
 ### Custom your own Dialect
 

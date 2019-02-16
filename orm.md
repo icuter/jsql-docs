@@ -1,48 +1,134 @@
 # ORM
 
-You can use simple orm helper utily which name is `cn.icuter.jsql.orm.ORMapper`. Using `@ColumnName` annotation associate db table column and object field name.
+You can use orm helper utility which name is `cn.icuter.jsql.orm.ORMapper` and `@ColumnName` annotation to associate
+the DB table columns and object fields. Of course, if you feel tedious to define a relational class mapping field and column,
+you would like to operate `Map<String, Object>` instead of class can give you a great help. As the following invocation
+- `InsertBuilder.values(Map<String, Object>)`
+- `UpdateBuilder.set(Map<String, Object>)`
+- `DefaultJdbcExecutor.execQuery(Builder)`
 
-### Select Value
-`cn.icuter.jsql.executor.DefaultJdbcExecutor.execQuery(Builder, Class<T>)` map to customer object
+## Support Class Field Type
+- short/Short
+- int/Integer
+- long/Long
+- float/Float
+- double/Double
+- byte/Byte
+- boolean/Boolean
+- BigInteger
+- BigDecimal
+- String
+- Clob
+- NClob
+- Blob
+- byte[]
 
+## Select
+JSQL wrap result from DB by using DQL(`select * from table ...`) as a map of list or relational class of list.
+Let's check out the example below to understand it's usage.
+
+First, we create a class which named `ORMClass`.
 ```java
+public class ORMClass {
+    @ColumnName("orm_id")
+    private String ormId;
+    @ColumnName("f_blob")
+    private byte[] fBlob;
+    @ColumnName("f_blob")
+    private Blob fBlobObj;
+    @ColumnName("f_clob")
+    private String fClob;
+    @ColumnName("f_clob")
+    private Clob fClobObj;
+    @ColumnName("f_string")
+    private String fString;
+    @ColumnName("f_int")
+    private int fInt;
+    @ColumnName("f_integer")
+    private Integer fInteger;
+    @ColumnName("f_double")
+    private double fDouble;
+    @ColumnName("f_decimal")
+    private BigDecimal fDecimal;
+
+    // Collapse get/set method
+}
+```
+
+Second, query DB result to `Map<String, Object>` or `ORMClass` for each record.
+```java
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 Builder builder = new SelectBuilder().select().from("t_table t").build();
-JdbcExecutor jdbcExecutor = new DefaultJdbcExecutor(connection);
-List<Map<String, Object>> resultMap = jdbcExecutor.execQuery(builder);
-List<Table> resultORM = jdbcExecutor.execQuery(builder, Table.class);
+try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
+    List<Map<String, Object>> resultMap = jdbcExecutor.execQuery(builder);
+    List<ORMClass> resultORM = jdbcExecutor.execQuery(builder, ORMClass.class);
+}
 ```
 
-### Insert Value
-If field value is null will be ignore
-```java
-Student student = new Student();
-student.setGrade(2);
-student.setName("Edward");
-student.setAge(20);
-student.setClass("04-1");
+## Insert
+In this section, we could learn how to insert an `ORMClass` or `Map<String, Object>` to DB. We will reuse the
+`ORMClass` in the previous section.
 
-Builder insert = new InsertBuilder().insertInto("t_student").values(student).build();
+```java
+ORMClass ormClass = new ORMClass();
+ormClass.setOrmId(UUID.randomUUID().toString());
+ormClass.setfString(null); // ignore inserting
+ormClass.setfInteger(100);
+ormClass.setfInt(100);
+ormClass.setfDecimal(new BigDecimal("100.002"));
+ormClass.setfDouble(100.00d);
+ormClass.setfClobObj(new JSQLClob("test jsql clob"));
+ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
+
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
+    dataSource.insert("t_test_table").values(ormClass).execUpdate(jdbcExecutor);
+}
 ```
 
-### Update Value
-If field value is null will be ignore
-```java
-Student student = new Student();
-student.setGrade(2);
-student.setName("Edward");
-student.setAge(20);
-student.setClass(null); // don't set class null
+### NOTE
 
-Builder update = new UpdateBuilder().update("t_student").set(student).build();
+    As default, the null value of field will be ignored while processing,
+    and Clob/NClob/Blob could be created by JSQLClob/JSQLNClob/JSQLBlob.
+
+## Update
+Update DB record with ORM, as default, you can not update null value, if you want to do so, 
+try to call `UpdateBuilder.set(Object, FieldInterceptor)` instead of `UpdateBuilder.set(Object)`.
+
+```java
+ORMClass ormClass = new ORMClass();
+ormClass.setOrmId(UUID.randomUUID().toString());
+ormClass.setfString(null); // ignore update
+ormClass.setfInteger(100);
+ormClass.setfInt(100);
+ormClass.setfDecimal(new BigDecimal("100.002"));
+ormClass.setfDouble(100.00d);
+ormClass.setfClobObj(new JSQLClob("test jsql clob"));
+ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
+
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
+    dataSource.update("t_test_table").set(ormClass)
+    .where().eq("orm_id", ormClass.getOrmId()).execUpdate(jdbcExecutor);
+}
 ```
 
-If you want to set null value, you can use `ORMapper.toMap` instead of `ORMapper.toMapIgnoreNullValue`
+As following example, let's to use `UpdateBuilder.set(Object, FieldInterceptor)` to ignore orm_id update.
 ```java
-Student student = new Student();
-student.setGrade(2);
-student.setName("Edward");
-student.setAge(20);
-student.setClass(null);
+ORMClass ormClass = new ORMClass();
+ormClass.setOrmId(UUID.randomUUID().toString());
+ormClass.setfString(null); // ignore update
+ormClass.setfInteger(100);
+ormClass.setfInt(100);
+ormClass.setfDecimal(new BigDecimal("100.002"));
+ormClass.setfDouble(100.00d);
+ormClass.setfClobObj(new JSQLClob("test jsql clob"));
+ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
-Builder update = new UpdateBuilder().update("t_student").set(ORMapper.of(student).toMap()).build();
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
+    dataSource.update("t_test_table").set(ormClass,
+    (object, field, colName, value, resultMap) -> !"orm_id".equals(colName))
+    .where().eq("orm_id", ormClass.getOrmId()).execUpdate(jdbcExecutor);
+}
 ```

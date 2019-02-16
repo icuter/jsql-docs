@@ -2,24 +2,24 @@
 
 As following example, you can learn how to new a `Connection` from `JSQLDataSource`, Build SQL with Builder, and finally execute with JdbcExecutor.
 
-## Configure in maven pom.xml file
+## Maven dependency
 
 ```text
-<!-- for jdk1.8 -->
+<!-- for jdk1.8+ -->
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.3</version>
 </dependency>
 
-<!-- for jdk1.6 -->
+<!-- for jdk1.6+ -->
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql-jdk1.6</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.3</version>
 </dependency>
 ```
-## Coding
+## Example
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
@@ -34,6 +34,7 @@ try {
 ```
 
 Maybe you just need `JdbcExecutor` rather than `Connection`, and `JSQLDataSource` can also create a Builder for less coding and convenience we could simplfy our example as follow
+
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 JdbcExecutor executor = dataSource.createJdbcExecutor(connection);
@@ -44,4 +45,4 @@ try {
 }
 ```
 
-**Recommendation**: JSQLDataSource is singleton for each url/username
+> **Suggestion**: JSQLDataSource is singleton for each url/username
