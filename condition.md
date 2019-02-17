@@ -63,38 +63,6 @@ Builder builder = new SelectBuilder()
 
 **VALUE**: 123456789
 
-### union
-```java
-Builder union = UnionSelectBuilder.union(
-     new SelectBuilder()
-         .select("t_id as id", "t_name as name")
-         .from("table")
-         .where()
-         .eq("region", "Canton").build(), 
-     new SelectBuilder()
-         .select("id", "name").from("table_1").where().eq("region", "China").build())
-     .build();
-```
-**SQL**: select * from ((select t_id as id, t_name as name from table where region = ?) union (select id, name from table_1 where region = ?))
-
-**VALUE**: "Canton", "China"
-
-### unionAll
-```java
-Builder unionAll = UnionSelectBuilder.unionAll(
-     new SelectBuilder()
-         .select("t_id as id", "t_name as name")
-         .from("table")
-         .where()
-         .eq("region", "Canton").build(), 
-     new SelectBuilder()
-         .select("id", "name").from("table_1").where().eq("region", "China").build())
-     .build();
-```
-**SQL**: select * from ((select t_id as id, t_name as name from table where region = ?) union all (select id, name from table_1 where region = ?))
-
-**VALUE**: "Canton", "China"
-
 ### and/or
 Sometimes we need to resolve multi conditions combination, then `and(Condition... conditions)` and `or(Condition... conditions)` could be used, as following example you can find out their usage.
 ```java

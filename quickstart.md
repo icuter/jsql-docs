@@ -9,14 +9,14 @@ As following example, you can learn how to new a `Connection` from `JSQLDataSour
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.2</version>
 </dependency>
 
 <!-- for jdk1.6+ -->
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql-jdk1.6</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 ## Example
@@ -26,10 +26,21 @@ JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 Connection connection = dataSource.newConnection();
 try {
     JdbcExecutor executor = new DefaultJdbcExecutor(connection);
-    Builder builder = new SelectBuilder().select().from("table").where().eq("name", "jsql").build()};
+    Builder builder = new SelectBuilder().select().from("table").where().eq("name", "jsql").build();
     List<Map<String, Object>> list = executor.execQuery(builder);
 } finally {
     connection.close();
+}
+```
+
+If you are under the jdk1.7 +, you can code with `try(resource){}` instead of `try{..} finally {..}`
+
+```java
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try (Connection connection = dataSource.newConnection()) {
+    JdbcExecutor executor = new DefaultJdbcExecutor(connection);
+    Builder builder = new SelectBuilder().select().from("table").where().eq("name", "jsql").build();
+    List<Map<String, Object>> list = executor.execQuery(builder);
 }
 ```
 
@@ -37,7 +48,7 @@ Maybe you just need `JdbcExecutor` rather than `Connection`, and `JSQLDataSource
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-JdbcExecutor executor = dataSource.createJdbcExecutor(connection);
+JdbcExecutor executor = dataSource.createJdbcExecutor();
 try {
     List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery(executor);
 } finally {
@@ -45,4 +56,12 @@ try {
 }
 ```
 
+If you are under the jdk1.7 +, you can code with `try(resource){}` instead of `try{..} finally {..}`
+
+```java
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try (JdbcExecutor executor = dataSource.createJdbcExecutor()) {
+    List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery(executor);
+}
+```
 > **Suggestion**: JSQLDataSource is singleton for each url/username
