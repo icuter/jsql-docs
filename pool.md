@@ -1,7 +1,9 @@
 # Jdbc Object Pool
 
 ## JSQLDataSource
-Now, let’s try to create a JSQLDataSource and new a Connection from JSQLDataSource.
+At first, we'd better new a `JSQLDataSource` instance that is the JSQL programing entrance,
+Connection pool even JdbcExecutor pool can be created by `JSQLDataSource`, please refer to
+the following section.
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
@@ -10,17 +12,17 @@ Connection connection = dataSource.newConnection();
 ```
 
 ### Connection Pool
-First, we'd create a JSQLDataSource, and then invoke `JSQLDataSource.createConnectionPool` to create a Connection Pool.
+Create `ConnectionPool` by `JSQLDataSource`.
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 ConnectionPool pool = dataSource.createConnectionPool();
 Connection connection = null;
 try {
-    connection = pool.getConnection();
+    connection = pool.getConnection(); // This is a PooledConnection
     // TODO do something with connection
 } finally {
-    pool.returnConnection(connection);
+    connection.close(); // same to pool.returnConnection(connection);
 }
 ```
 
@@ -58,15 +60,15 @@ JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 
 PoolConfiguration poolConfiguration = PoolConfiguration.defaultPoolCfg();
 poolConfiguration.setMaxPoolSize(32);
-ObjectPool<Connection> pool = dataSource.createConnectionPool(poolConfiguration);
+ConnectionPool pool = dataSource.createConnectionPool(poolConfiguration);
 ```
 
- name | comment | default value
+ name | comment
 ---|---|---
-maxPoolSize | Max object pool size | 20
-idleTimeout | The max valid milliseconds between object returned till now, 0 will be timeout immediately when returning or checked by pool maintainer, and -1 means never timeout | 1 hour
-idleCheckInterval | The interval time of milliseconds to trigger pool maintainer checking idle object | 30 minutes
-pollTimeout | Setting time waiting for borrowing a object with milliseconds, -1 will never timeout | 5 seconds
+maxPoolSize | The max object pool size <br> *default: 20*
+idleTimeout | The max idle time of object after returned, and will check it' idle timeout when borrow object from pool.<br>&nbsp;0: timeout immediately when returning or checked by pool maintainer<br>-1: never timeout<br> *default: 30 minutes*
+idleCheckInterval | The interval time of milliseconds to trigger pool maintainer checking for removing timeout idle object. Usually, when borrowing object also check it's idle timeout and try to remove it from pool, so idle object checking don't depend on idle object checker.<br> *default: 0* <br> **NOTE:** If you need to check idle object with interval time, especially, fire wall auto close the long time connection and without sending reset signal.
+pollTimeout | Time of milliseconds to wait for borrowing a object.<br>&nbsp;0: no wait<br>-1: hold waiting until success<br> *default: 5 seconds*
 
 `PoolConfiguration.defaultPoolCfg()` could get the default Pool Configuration.
 
