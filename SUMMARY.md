@@ -2,7 +2,7 @@
 
 * [Introduction](README.md)
 * [Quick Start](quickstart.md)
-* [JDBC Connection Pool](pool.md)
+* [Connection Pool](pool.md)
 * [SQL Builder](builder.md)
 * [Condition](condition.md)
 * [DB Dialect](dialect.md)
