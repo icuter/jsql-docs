@@ -7,19 +7,18 @@ Dialect is for unify variant DB while building SQL, so far, Dialect could inject
 - CubridDialect
 - SQLiteDialect
 - DB2Dialect
-- DerbyDialect
+- DerbyDialect (EmbeddedDerbyDialect/NetworkDerbyDialect)
 - H2Dialect
 - MariaDBDialect
 - MySQLDialect
 - OracleDialect
 - PostgreSQLDialect
-- SQLServer2012PlusDialect
-- SqlServerDialect
-- UnknownDialect (Other kinds of DB JSQL don't support)
+- SQLServer2012PlusDialect (version >= 2012)
 
 ### Custom your own Dialect
 
-1. Implements Dialect interface
+- Implements Dialect interface
+
     ```java
     public CustomDialect implements Dialect {
         public String getDriverClassName() {
@@ -46,9 +45,42 @@ Dialect is for unify variant DB while building SQL, so far, Dialect could inject
     }
     ```
 
-1. How to make `CustomDialect` work
+- How to make `CustomDialect` work
+
     ```java
     JSQLDataSource datasource = new JSQLDataSource(url, username, password, new CustomDialect());
     
     Builder builder = new SelectBuilder(new CustomDialect());
     ```
+
+- `Join On` Support Features
+
+
+ dialect name            | inner join on | left \[outer] join on | right \[outer] join on | full \[outer] join on
+---|---|---|---|---
+CubridDialect            | √             | √                     | √                      | ✘
+SQLiteDialect            | √             | √                     | ✘                      | ✘
+DB2Dialect               | √             | √                     | √                      | ✘
+DerbyDialect             | √             | √                     | √                      | ✘
+H2Dialect                | √             | √                     | √                      | ✘
+MariaDBDialect           | √             | √                     | √                      | ✘
+MySQLDialect             | √             | √                     | √                      | ✘
+OracleDialect            | √             | √                     | √                      | √
+PostgreSQLDialect        | √             | √                     | √                      | √
+SQLServer2012PlusDialect | √             | √                     | √                      | √
+
+- `Join Using` Support Features
+
+
+ dialect name            | inner join using | left \[outer] join using | right \[outer] join using | full \[outer] join using
+---|---|---|---|---
+CubridDialect            | ✘                | ✘                        | ✘                         | ✘
+SQLiteDialect            | √                | √                        | ✘                         | ✘
+DB2Dialect               | √                | √                        | √                         | √
+DerbyDialect             | √                | √                        | √                         | ✘
+H2Dialect                | ✘                | ✘                        | ✘                         | ✘
+MariaDBDialect           | √                | √                        | √                         | ✘
+MySQLDialect             | √                | √                        | √                         | ✘
+OracleDialect            | √                | √                        | √                         | √
+PostgreSQLDialect        | √                | √                        | √                         | √
+SQLServer2012PlusDialect | ✘                | ✘                        | ✘                         | ✘
