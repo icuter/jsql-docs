@@ -1,9 +1,12 @@
 # Logging
 
-While using JSQL, we must concern SQL and it's value log. For this, we design a interface name `cn.icuter.jsql.log.JSQLLogger`, if you want to use your own Logger which your system is in use. We have implemented SLF4j/Log4j2/Log4j2/JUL, so that logging into your log automatically.
+While using JSQL, we must concern SQL and it's values' log.
+So, JSQL design an interface of `cn.icuter.jsql.log.JSQLLogger` for your own Logger.
+JSQL has implemented SLF4j/Log4j2/Log4j2/JUL, and auto detecting priority is `SLF4j > Log4j2 > Log4j2 > JUL`,
+as long as your library including `slf4j.jar` or other else supported by JSQL.
 
-Note
-> JUL is the short name of `java.util.logging.Logger`, logback not in implemented list is due to it's using SLF4j api as well.
+**Note**
+> JUL is the short name of `java.util.logging.Logger`, `logback` depends on SLF4j as well.
 
 ### Configuration
 #### Log4j2

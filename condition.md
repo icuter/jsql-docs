@@ -1,6 +1,8 @@
 # Condition
 
-There are variant condition and you will find out the method name is same to SQL syntax. Condition is used in Builder, sometimes also used as value. Here docs is for special condition, such as `gt(>)`/`ge(>=)`/`lt(<)`/`le(<=)`/`like`/`ne(<>)`/`eq(=)` I thought you can handle it yourself.
+There are variant condition and you will find out the method name is same to SQL syntax. Condition is used in Builder, sometimes also used as value. Here docs is for special condition,
+such as `gt(>)`/`ge(>=)`/`lt(<)`/`le(<=)`/`like`/`ne(<>)`/`eq(=)`,
+assume you can handle it by yourself.
 
 ### var
 Sometimes, we need to make condition without place holder which display in SQL with `?`, but directly display in SQL, just like `Cond.var("key", "value")` output `key = value`, check example as follow.

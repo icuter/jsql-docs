@@ -17,7 +17,7 @@ Dialect is for unify variant DB while building SQL, so far, Dialect could inject
 
 ### Custom your own Dialect
 
-- Implements Dialect interface
+- Implements `cn.icuter.jsql.dialect.Dialect` or extends `cn.icuter.jsql.dialect.AbstractDialect`
 
     ```java
     public CustomDialect implements Dialect {

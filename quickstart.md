@@ -9,14 +9,14 @@ As following example, you can learn how to new a `Connection` from `JSQLDataSour
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.6</version>
 </dependency>
 
 <!-- for jdk1.6+ -->
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql-jdk1.6</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.6</version>
 </dependency>
 ```
 ## Example
@@ -29,7 +29,7 @@ List<Map<String, Object>> list = dataSource.select().from("table")
                                                     .execQuery();
 ```
 
-Equal to
+Same as
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
@@ -47,7 +47,7 @@ what has done above examples ?
 4. close JdbcExecutor for returning back to the Connection Pool in JSQLDataSource
 
 
-Maybe you just need `JdbcExecutor` rather than `Connection`, and `JSQLDataSource` can also create a Builder for less coding and convenience we could simplfy our example as follow
+Maybe you just need `JdbcExecutor` rather than `Connection` and `JSQLDataSource` can also create a Builder for less coding and convenience we could simplfy our example as follow
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
@@ -67,9 +67,9 @@ try (JdbcExecutor executor = dataSource.createJdbcExecutor()) {
     List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery(executor);
 }
 ```
-> **Suggestion**: JSQLDataSource is singleton for each url/username
+> **Suggestion**: JSQLDataSource is singleton for each url and username
 
-Verbosely you can also using Connection and JdbcExecutor to execute Builder, but we don't recommend
+*NOT* recommended way that you can also using Connection and JdbcExecutor to execute Builder
 
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");

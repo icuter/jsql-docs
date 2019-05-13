@@ -1,8 +1,8 @@
 # ORM
 
-You can use orm helper utility which name is `cn.icuter.jsql.orm.ORMapper` and `@ColumnName` annotation to associate
-the DB table columns and object fields. Of course, if you feel tedious to define a relational class mapping field and column,
-you would like to operate `Map<String, Object>` instead of class can give you a great help. As the following invocation
+Class of `cn.icuter.jsql.orm.ORMapper` and annotation of `@ColumnName` to associate
+the DB table columns with class's fields. Of course, if you feel tedious to define a relational class mapping field and column,
+you would like to operate `Map<String, Object>` instead of class. As the following invocation
 - `InsertBuilder.values(Map<String, Object>)`
 - `UpdateBuilder.set(Map<String, Object>)`
 - `DefaultJdbcExecutor.execQuery(Builder)`
@@ -81,9 +81,7 @@ ormClass.setfClobObj(new JSQLClob("test jsql clob"));
 ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
-    dataSource.insert("t_test_table").values(ormClass).execUpdate(jdbcExecutor);
-}
+dataSource.insert("t_test_table").values(ormClass).execUpdate();
 ```
 
 ### NOTE
@@ -107,10 +105,8 @@ ormClass.setfClobObj(new JSQLClob("test jsql clob"));
 ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
-    dataSource.update("t_test_table").set(ormClass)
-    .where().eq("orm_id", ormClass.getOrmId()).execUpdate(jdbcExecutor);
-}
+dataSource.update("t_test_table").set(ormClass)
+          .where().eq("orm_id", ormClass.getOrmId()).execUpdate();
 ```
 
 As following example, let's to use `UpdateBuilder.set(Object, FieldInterceptor)` to ignore orm_id update.
@@ -126,9 +122,8 @@ ormClass.setfClobObj(new JSQLClob("test jsql clob"));
 ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
-    dataSource.update("t_test_table").set(ormClass,
-    (object, field, colName, value, resultMap) -> !"orm_id".equals(colName))
-    .where().eq("orm_id", ormClass.getOrmId()).execUpdate(jdbcExecutor);
+    dataSource.update("t_test_table")
+              .set(ormClass, (object, field, colName, value, resultMap) -> !"orm_id".equals(colName))
+              .where().eq("orm_id", ormClass.getOrmId()).execUpdate();
 }
 ```

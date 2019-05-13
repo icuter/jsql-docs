@@ -2,7 +2,9 @@
 
 * [Introduction](README.md)
 * [Quick Start](quickstart.md)
+* [DataSource](datasource.md)
 * [Connection Pool](pool.md)
+* [Transaction](transaction.md)
 * [SQL Builder](builder.md)
 * [Condition](condition.md)
 * [DB Dialect](dialect.md)

@@ -1,9 +1,19 @@
 # Executor
 
 ## JdbcExecutor
-When Builder has been built, we could use JdbcExecutor for execution. `dataSource.createJdbcExecutor()` will create a `CloseableJdbcExecutor` object, while calling `close` method, `Conection` in `JdbcExecutor` will be closed as well.
+JdbcExecutor for executing Builder.
 
 ### Select
+
+```java
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try {
+    List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery();
+} finally {
+    executor.close();
+}
+```
+
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 JdbcExecutor executor = dataSource.createJdbcExecutor();
@@ -17,9 +27,22 @@ try {
 ### Insert/Update/Delete
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+try {
+    int count = dataSource.insert("table").values(Cond.eq("name", "jsql")).execUpdate();
+    count = dataSource.update("table").set(Cond.eq("name", "icuter")).execUpdate();
+    count = dataSource.delete().from("table").where().eq("name", "jsql").execUpdate();
+} finally {
+     executor.close();
+}
+```
+
+```java
+JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
 JdbcExecutor executor = dataSource.createJdbcExecutor();
 try {
-    int count = delete().from("table").where().eq("name", "jsql").execUpdate(executor);
+    int count = dataSource.insert("table").values(Cond.eq("name", "jsql")).execUpdate(executor);
+    count = dataSource.update("table").set(Cond.eq("name", "icuter")).execUpdate(executor);
+    count = dataSource.delete().from("table").where().eq("name", "jsql").execUpdate(executor);
 } finally {
      executor.close();
 }
@@ -70,10 +93,7 @@ Builder builder = new SelectBuilder().select().from("table").where().eq("name", 
 List<Map<String, Object>> resultList = executor.execQuery(builder);
 ```
 
-## Transaction
-At this section, we could learn `TransactionExecutor`'s usage and we would note that it's detail for commit/rollback/end and even Connection close.
-
-### TransactionExecutor
+## TransactionExecutor
 Now, let'u create a `TransactionExecutor` with `Connection` parameter. At following example, while we commit/rollback, `Connection` will be closed as well.
 ```java
 JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
@@ -106,7 +126,7 @@ try {
 ```
 
 **Note**
-> Please note that, Connection will be closed while calling commit or rollback, if don't commit or rollback, Conneciton in TransactionExecutor will be always alive and keep connecting to DB server.
+> Please note that, Connection will be closed while calling commit or rollback, if don't commit or rollback, Connection in TransactionExecutor will be always alive and keep connecting to DB server.
 
 ### JdbcExecutorPool
 From JdbcExecutor Pool we could get `TransactionExecutor` and process jdbc SQL with it and do transaction manually.
