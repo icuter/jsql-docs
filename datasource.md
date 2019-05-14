@@ -9,7 +9,7 @@ be faded.
 JSQLDataSource datasource = new JSQLDataSource("jdbc:h2:tcp://192.168.200.96:1522/testdb;DB_CLOSE_ON_EXIT=FALSE", "your_name", "your_password");
 
 Properties props = new Properties();
-props.Properties("url", "jdbc:mariadb://192.168.200.96:3307/testdb?serverTimezone=GMT%2B8");
+props.setProperty("url", "jdbc:mariadb://192.168.200.96:3307/testdb?serverTimezone=GMT%2B8");
 props.setProperty("loginTimeout", "10");
 props.setProperty("username", "jsql"); // will be overridden by driver.user
 props.setProperty("driver.user", "your_name");
