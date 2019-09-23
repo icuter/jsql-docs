@@ -9,14 +9,14 @@ As following example, you can learn how to new a `Connection` from `JSQLDataSour
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql</artifactId>
-  <version>1.0.7</version>
+  <version>1.1.0</version>
 </dependency>
 
 <!-- for jdk1.6+ -->
 <dependency>
   <groupId>cn.icuter</groupId>
   <artifactId>jsql-jdk1.6</artifactId>
-  <version>1.0.7</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 ## Example
