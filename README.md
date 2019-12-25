@@ -37,6 +37,6 @@ JSQL for Reasons:
 5. H2
 6. MariaDB
 7. MySQL
-8. Oracle
+8. Oracle(Driver Version >= ojdbc6)
 9. PostgreSQL
 10. SQLServer2012(version >= 2012)
