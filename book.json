@@ -6,7 +6,7 @@
     "page-footer": {
       "description": "",
       "signature": "Edward",
-      "wisdom": "JSQL JustSQL jdbc lightweight framework <br> <strong>Record Number(zh_CN: 备案号) 粤ICP备17102114号-1</strong> <div style=\"width:300px;margin:0 auto; padding:20px 0;\"><a target=\"_blank\" href=\"http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44011302001908\" style=\"display:inline-block;text-decoration:none;height:20px;line-height:20px;\"><img src=\"https://github.com/icuter/images/blob/master/ga_beian.png?raw=true\" style=\"float:left;\"/><p style=\"float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;\">粤公网安备 44011302001908号</p></a></div>",
+      "wisdom": "JSQL JustSQL jdbc lightweight framework <br> <strong>Record Number(zh_CN: 备案号) <a href=\"http://beian.miit.gov.cn\">粤ICP备17102114号</a></strong> <div style=\"width:300px;margin:0 auto; padding:20px 0;\"><a target=\"_blank\" href=\"http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44011302001908\" style=\"display:inline-block;text-decoration:none;height:20px;line-height:20px;\"><img src=\"https://github.com/icuter/images/blob/master/ga_beian.png?raw=true\" style=\"float:left;\"/><p style=\"float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;\">粤公网安备 44011302001908号</p></a></div>",
       "format": "yyyy-MM-dd hh:mm:ss",
       "copyright": "Copyright &#169; edward",
       "timeColor": "#666",
