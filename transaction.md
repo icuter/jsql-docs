@@ -4,7 +4,8 @@ At this section, we could learn `TransactionExecutor`'s usage and we would note 
 ### TransactionExecutor
 Now, let'u create a `TransactionExecutor` with `Connection` parameter. At following example, while we commit/rollback, `Connection` will be closed as well.
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 Connection connection = dataSource.createConnection(false);
 TransactionExecutor executor = new TransactionExecutor(connection);
 try {
@@ -24,7 +25,8 @@ Do transaction under TransactionDataSource that created by JSQLDataSource.
 Please play attention, if exception occurs will cause transaction rollback.
 
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 dataSource.transaction(tx -> {
     tx.insert("table")
       .values(Cond.eq("col1", "val1"), Cond.eq("col2", 102),Cond.eq("col3", "val3")).execUpdate();
@@ -33,7 +35,8 @@ dataSource.transaction(tx -> {
 ```
 
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 TransactionDataSource tx = dataSource.transaction();
 tx.insert("table")
   .values(Cond.eq("col1", "val1"), Cond.eq("col2", 102),Cond.eq("col3", "val3"))

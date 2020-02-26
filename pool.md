@@ -1,26 +1,34 @@
 # Jdbc Object Pool
 
 ## Connection Pool
-Create `ConnectionPool` by `JSQLDataSource`.
 
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-ConnectionPool pool = dataSource.createConnectionPool();
-Connection connection = null;
-try {
-    connection = pool.getConnection(); // This is a PooledConnection
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
+PooledConnection pool = dataSource.getPooledConnection();
+try (Connection connection = pool.getConnection()) {
+    // This is a PooledConnection
     // TODO do something with connection
-} finally {
-    connection.close(); // same to pool.returnConnection(connection);
+}
+```
+
+Get Connection directly from pool
+
+```java
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
+try (Connection connection = dataSource.getConnection()) {
+    // This is a PooledConnection
+    // TODO do something with connection
 }
 ```
 
 ## JdbcExecutor Pool
-Like Connection Pool creation, but provide a executor object which combine JdbcExecutor and Connection to work together.
 
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-JdbcExecutorPool pool = dataSource.createExecutorPool();
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
+JdbcExecutorPool pool = dataSource.getExecutorPool();
 JdbcExecutor executor = pool.getExecutor();
 try {
     // TODO do something with executor
@@ -29,28 +37,40 @@ try {
 }
 ```
 
-Let's refactor our quick start example by using `JdbcExecutorPool`
+Get jdbc executor directly from pool
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
-JdbcExecutorPool pool = dataSource.createExecutorPool();
-JdbcExecutor executor = pool.getExecutor();
-try {
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
+
+try (JdbcExecutor executor = dataSource.getJdbcExecutor()) {
     List<Map<String, Object>> list = dataSource.select().from("table").where().eq("name", "jsql").execQuery(executor);
-} finally {
-    executor.close();
 }
 ```
 
 ## Pool Configuration
-If we want to configure pool, do it by `PoolConfiguration`.
+Now, let's customize out connection object pool by `PoolConfiguration`.
 
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 
 PoolConfiguration poolConfiguration = PoolConfiguration.defaultPoolCfg();
 poolConfiguration.setMaxPoolSize(32);
 ConnectionPool pool = dataSource.createConnectionPool(poolConfiguration);
 ```
+
+For better and shorter is to get Connection Pool from inner `JSQLDataSource`
+
+```java
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass")
+                            .poolMaxSize(32)
+                            .build();
+PooledConnection pool = dataSource.getPooledConnection();
+```
+
+Pool Configuration settings overall
+
  name | comment
 ---|---
 maxPoolSize | The max object pool size <br> *default: 20*

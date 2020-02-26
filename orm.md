@@ -57,7 +57,8 @@ public class ORMClass {
 
 Second, query DB result to `Map<String, Object>` or `ORMClass` for each record.
 ```java
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 Builder builder = new SelectBuilder().select().from("t_table t").build();
 try (JdbcExecutor jdbcExecutor = dataSource.createJdbcExecutor()) {
     List<Map<String, Object>> resultMap = jdbcExecutor.execQuery(builder);
@@ -80,7 +81,8 @@ ormClass.setfDouble(100.00d);
 ormClass.setfClobObj(new JSQLClob("test jsql clob"));
 ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 dataSource.insert("t_test_table").values(ormClass).execUpdate();
 ```
 
@@ -104,7 +106,8 @@ ormClass.setfDouble(100.00d);
 ormClass.setfClobObj(new JSQLClob("test jsql clob"));
 ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
 dataSource.update("t_test_table").set(ormClass)
           .where().eq("orm_id", ormClass.getOrmId()).execUpdate();
 ```
@@ -121,7 +124,8 @@ ormClass.setfDouble(100.00d);
 ormClass.setfClobObj(new JSQLClob("test jsql clob"));
 ormClass.setfBlobObj(new JSQLBlob("test jsql clob".getBytes()));
 
-JSQLDataSource dataSource = new JSQLDataSource("url", "username", "password");
+JSQLDataSource dataSource = JSQLDataSource.newDataSourceBuilder()
+                            .url("jdbcUrl").user("jsql").password("pass").build();
     dataSource.update("t_test_table")
               .set(ormClass, (object, field, colName, value, resultMap) -> !"orm_id".equals(colName))
               .where().eq("orm_id", ormClass.getOrmId()).execUpdate();
